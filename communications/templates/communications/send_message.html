@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if messages %}
+<div class="container text-center mt-2 mb-3" style="max-width: 300px;">
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' or message.tags == 'danger' or message.tags == 'info' %}alert-danger{% endif %}" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% include 'communications/navigation.html' with active_option='create' %}
+<h2 class="text-center mt-2 mb-3">Create a Message</h2>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="{% url 'send-message' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="receiver" class="form-label">Recipient Email</label>
+                            <input type="email" class="form-control" id="receiver" name="receiver" placeholder="Enter recipient's email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Message</label>
+                            <textarea class="form-control" id="content" name="content" rows="5" placeholder="Enter your message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

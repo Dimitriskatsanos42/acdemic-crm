@@ -1,0 +1,28 @@
+<div class="container text-center">
+    <div class="row justify-content-center">
+        <!-- Inbox -->
+        <div class="col-auto">
+            <a href="{% url 'inbox' %}" class="text-decoration-none">
+                <div class="card text-center">
+                    <div class="card-body py-0 px-4 py-1 d-flex justify-content-center align-items-center">
+                        <i class="bi bi-inbox{% if active_option == 'inbox' %}-fill{% endif %} me-2" style="font-size: 1.5rem;"></i>
+                        <span>Inbox</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Create a Message -->
+        <div class="col-auto">
+            <a href="{% url 'send-message' %}" class="text-decoration-none">
+                <div class="card text-center">
+                    <div class="card-body py-0 px-4 py-1 d-flex justify-content-center align-items-center">
+                        <i class="bi bi-envelope-plus{% if active_option == 'create' %}-fill{% endif %} me-2" style="font-size: 1.5rem;"></i>
+                        <span>Create</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<hr>

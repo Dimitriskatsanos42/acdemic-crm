@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if messages %}
+<div class="container text-center mt-2 mb-3" style="max-width: 300px;">
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' or message.tags == 'danger' or message.tags == 'info' %}alert-danger{% endif %}" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% include 'communications/navigation.html' with active_option='inbox' %}
+
+<h3 class="text-center mt-2 mb-3">
+    {% if chat_messages %}
+        Active conservations
+    {% else %}
+        You have no active conservations!
+    {% endif %}
+</h3>
+<div class="list-group container">
+    {% for message in chat_messages %}
+    <a href="{% url 'message-details' message.id %}" class="list-group-item list-group-item-action" style="max-width: 100%; width: auto; margin-right: 16px;">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">
+                {% if message.sender == request.user %}
+                    To: {% if message.receiver.first_name and message.receiver.last_name %}
+                        {{ message.receiver.first_name }} {{ message.receiver.last_name }}
+                    {% endif %}
+                    ({{ message.receiver.email }})
+                {% else %}
+                    From: {% if message.sender.first_name and message.sender.last_name %}
+                        {{ message.sender.first_name }} {{ message.sender.last_name }}
+                    {% endif %}
+                    ({{ message.sender.email }})
+                {% endif %}
+            </h5>
+            <small>{{ message.timestamp|date:"d M Y, H:i" }}</small>
+        </div>
+        <p class="mb-1">{{ message.content|truncatewords:20 }}</p>
+    </a>
+    {% endfor %}
+</div>
+
+{% endblock %}

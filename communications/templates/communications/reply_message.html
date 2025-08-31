@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'communications/navigation.html' %}
+
+<div class="container">
+    <h2 class="text-center mt-2 mb-3">Reply to Message</h2>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">From: {{ parent_message.sender.email }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ parent_message.timestamp|date:"d M Y, H:i" }}</h6>
+            <p class="card-text">{{ parent_message.content }}</p>
+        </div>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <textarea class="form-control" name="content" rows="5" placeholder="Enter your reply" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Send Reply</button>
+    </form>
+</div>
+
+{% endblock %}
