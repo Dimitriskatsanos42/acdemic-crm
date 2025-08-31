@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Alert Section -->
+    {% if messages %}
+    <div class="container mt-4">
+        {% for message in messages %}
+        <div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <!-- My Courses Section -->
+        <div class="col-md-8">
+            <h2>Τα μαθήματά μου</h2>
+            <div class="table-container mt-3">
+                <table class="table table-bordered table-striped">
+                    <thead class="bg-primary text-dark">
+                        <tr>
+                            <th>Κωδικός</th>
+                            <th>Όνομα</th>
+                            <th>Εξάμηνο</th>
+                            <th>Διδακτικές Μονάδες</th>
+                            <th>Ενέργεια</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in enrolled_courses %}
+                        <tr>
+                            <td>{{ course.code }}</td>
+                            <td>{{ course.name }}</td>
+                            <td>{{ course.semester }}</td>
+                            <td>{{ course.credits }}</td>
+                            <td>
+                                <a href="{% url 'unenroll' course.id %}" class="btn btn-danger btn-sm">Απεγγραφή</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">Δε βρέθηκαν μαθήματα στα οποία είστε εγγεγραμμένος/η.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="col-md-4">
+            <h2>Αναζήτηση</h2>
+            <form method="get" class="mt-3">
+                <div class="input-group">
+                    <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Αναζητήστε διαθέσιμα μαθήματα...">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Αναζήτηση
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Available Courses Section -->
+    <h2 class="mt-5">Διαθέσιμα μαθήματα</h2>
+    <p>Παρακάτω βλέπετε τα διαθέσιμα μαθήματα στα οποία μπορείτε να εγγραφείτε για το τρέχον εξάμηνο
+        {% if current_semester == 'winter' %}
+            <strong>(ΧΕΙΜΕΡΙΝΟ)</strong>
+        {% else %}
+            <strong>(ΕΑΡΙΝΟ)</strong>
+        {% endif %}
+    </p>
+    <div class="table-container mt-3">
+        <table class="table table-bordered table-striped">
+            <thead class="bg-primary text-dark">
+                <tr>
+                    <th>Κωδικός</th>
+                    <th>Όνομα</th>
+                    <th>Εξάμηνο</th>
+                    <th>Διδακτικές Μονάδες</th>
+                    <th>Ενέργεια</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in available_courses %}
+                <tr>
+                    <td>{{ course.code }}</td>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.semester }}</td>
+                    <td>{{ course.credits }}</td>
+                    <td>
+                        <a href="{% url 'enroll' course.id %}" class="btn btn-success btn-sm">Εγγραφή</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Δεν υπάρχει διαθέσιμο μάθημα προς εγγραφή για το τρέχον εξάμηνο...</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

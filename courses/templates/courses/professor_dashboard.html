@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- My Courses Section -->
+    <h2>Τα μαθήματά μου</h2>
+    <div class="table-container mt-3">
+        <table class="table table-bordered table-striped">
+            <thead class="bg-primary text-dark">
+                <tr>
+                    <th>Κωδικός</th>
+                    <th>Όνομα</th>
+                    <th>Εξάμηνο</th>
+                    <th>Διδακτικές Μονάδες</th>
+                    <th>Ενέργεια</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in assigned_courses %}
+                <tr>
+                    <td>{{ course.code }}</td>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.semester }}</td>
+                    <td>{{ course.credits }}</td>
+                    <td>
+                        <a href="{% url 'enrolled_students' course.id %}" class="btn btn-primary btn-sm">Προβολή εγγεγραμένων φοιτητών</a>
+                        <a href="{% url 'unenroll' course.id %}" class="btn btn-danger btn-sm">Απεγγραφή από υπεύθυνος</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Δε βρέθηκαν μαθήματα τα οποία έχετε αναλάβει ως υπεύθυνος/η.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Enroll as Head Section -->
+    <h2 class="mt-5">Enroll as Head</h2>
+    <p>Παρακάτω βλέπετε τα μαθήματα στα οποία μπορείτε να εγγραφείτε ως υπεύθυνος.</p>
+    <div class="table-container mt-3">
+        <table class="table table-bordered table-striped">
+            <thead class="bg-primary text-dark">
+                <tr>
+                    <th>Κωδικός</th>
+                    <th>Όνομα</th>
+                    <th>Εξάμηνο</th>
+                    <th>Διδακτικές Μονάδες</th>
+                    <th>Ενέργεια</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in available_courses %}
+                <tr>
+                    <td>{{ course.code }}</td>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.semester }}</td>
+                    <td>{{ course.credits }}</td>
+                    <td>
+                        <a href="{% url 'enroll' course.id %}" class="btn btn-success btn-sm">Εγγραφή ως Υπεύθυνος</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Δεν υπάρχει διαθέσιμο μάθημα για εγγραφή ως υπεύθυνος...</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
