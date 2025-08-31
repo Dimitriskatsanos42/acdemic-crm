@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <a href="{% url 'events-list-calendar' year=meeting.date.year month=meeting.date.month day=meeting.date.day %}" class="d-flex align-items-center mt-3 text-decoration-none">
+        <i class="bi bi-arrow-left-circle me-2" style="font-size: 1.5rem;"></i>
+        <span>Πίσω</span>
+    </a>
+    <br>
+    <h2>Πληροφορίες συνάντησης</h2>
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-primary text-white">
+            <h5>{{ meeting.name }}</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Δημιουργός:</strong> {{ meeting.created_by.get_full_name }}</p>
+            <p><strong>Ημερομηνία:</strong> {{ meeting.date|date:"l, j F Y" }}</p>
+            <p><strong>Ώρα:</strong> {{ meeting.time|time:"h:i A" }}</p>
+            <p><strong>Διάρκεια:</strong> {{ meeting.get_duration_display }}</p>
+            {% if meeting.url %}
+            <p><strong>Σύνδεσμος εκδήλωσης:</strong> <a href="{{ event.url }}" target="_blank">{{ meeting.url }}</a></p>
+            {% endif %}
+            <p><strong>Περιγραφή:</strong></p>
+            <p>{{ meeting.description }}</p>
+        </div>
+        {% if meeting.attendee == request.user.email and meeting.status == 'pending' %}
+        <div class="card-footer">
+            <a href="{% url 'accept-meeting' meeting.id %}" class="btn btn-success">
+                <i class="bi bi-check-circle"></i> Αποδοχή
+            </a>
+            <a href="{% url 'decline-meeting' meeting.id %}" class="btn btn-danger">
+                <i class="bi bi-x-circle"></i> Απόρριψη
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

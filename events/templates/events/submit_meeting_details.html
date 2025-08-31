@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 600px;"> <!-- Increased container width -->
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <a href="{% url 'events-list-calendar' year=meeting.date.year month=meeting.date.month day=meeting.date.day %}" class="d-flex align-items-center mt-3 text-decoration-none">
+                <i class="bi bi-arrow-left-circle me-2" style="font-size: 1.5rem;"></i>
+                <span>Πίσω</span>
+            </a>
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Συνοπτικό έντυπο συναντήσεων σύμβουλου σπουδών</h3>
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Section A -->
+                        <h4 class="mt-4">Α. Στοιχεία Σύμβουλου Σπουδών</h4>
+                        <hr>
+
+                        <!-- Professor First Name -->
+                        <div class="mb-3">
+                            {{ form.professor_first_name.label_tag }}
+                            {{ form.professor_first_name }}
+                        </div>
+
+                        <!-- Professor Last Name -->
+                        <div class="mb-3">
+                            {{ form.professor_last_name.label_tag }}
+                            {{ form.professor_last_name }}
+                        </div>
+
+                        <!-- Section B -->
+                        <h4 class="mt-4">Β. Στοιχεία Φοιτητή</h4>
+                        <hr>
+                        <!-- Student First Name -->
+                        <div class="mb-3">
+                            {{ form.student_first_name.label_tag }}
+                            {{ form.student_first_name }}
+                        </div>
+
+                        <!-- Student Last Name -->
+                        <div class="mb-3">
+                            {{ form.student_last_name.label_tag }}
+                            {{ form.student_last_name }}
+                        </div>
+
+                        <!-- Student Email -->
+                        <div class="mb-3">
+                            {{ form.student_email.label_tag }}
+                            {{ form.student_email }}
+                        </div>
+
+                        <!-- Section C -->
+                        <h4 class="mt-4">Γ. Στοιχεία Συναντήσεων</h4>
+                        <hr>
+                        
+                        <!-- Academic Year -->
+                        <div class="mb-3">
+                            {{ form.academic_year.label_tag }}
+                            {{ form.academic_year }}
+                        </div>
+                        
+                        <!-- Semester -->
+                        <div class="mb-3">
+                            {{ form.semester.label_tag }}
+                            {{ form.semester }}
+                        </div>
+                        
+                        <!-- Average Duration -->
+                        <div class="mb-3">
+                            {{ form.duration.label_tag }}
+                            {{ form.duration }}
+                        </div>
+                        
+                        <!-- Topics -->
+                        <div class="mb-3">
+                            {{ form.topics.label_tag }}
+                            {{ form.topics }}
+                        </div>
+
+                        <!-- Comments -->
+                        <div class="mb-3">
+                            {{ form.comments.label_tag }}
+                            {{ form.comments }}
+                        </div>                       
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize Select2
+        $('.select2').select2({
+            placeholder: "Select topics",
+            allowClear: true,
+            width: '100%'
+        });
+    
+        // Handle Custom Topic Field Visibility
+        const customTopicContainer = document.getElementById('custom-topic-container');
+        const topicsSelect = document.getElementById('id_topics');
+    
+        function toggleCustomTopicField() {
+            const selectedOptions = Array.from(topicsSelect.selectedOptions).map(option => option.value);
+            customTopicContainer.style.display = selectedOptions.includes('other') ? 'block' : 'none';
+        }
+    
+        // Initial toggle on page load
+        toggleCustomTopicField();
+    
+        // Toggle on change
+        topicsSelect.addEventListener('change', toggleCustomTopicField);
+    });
+</script>
+{% endblock %}

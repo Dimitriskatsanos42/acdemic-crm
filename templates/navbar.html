@@ -1,0 +1,89 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <!-- App Name with Icon -->
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+            <i class="fas fa-graduation-cap me-2"></i> <!-- Academic icon -->
+            Academic CRM
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+            <!-- Centered Navigation Links -->
+            <ul class="navbar-nav mb-2 mb-lg-0 text-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}">
+                        <i class="fas fa-book me-2"></i> Courses
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'current-month-year-calendar' %}">
+                        <i class="fas fa-calendar-alt me-2"></i> Events
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'inbox' %}">
+                        <i class="fas fa-envelope me-2"></i> Communication Room
+                    </a>
+                </li>
+                {% if role == 'professor' %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'stats' %}">
+                        <i class="fas fa-chart-bar me-2"></i> Statistics
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Right-Aligned Section -->
+        <div class="d-flex align-items-center">
+            <!-- Notifications -->
+            <div class="dropdown me-4">
+                <a class="nav-link text-light position-relative" href="#" role="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-bell fa-lg"></i>
+                    {% if unread_notifications_count > 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ unread_notifications_count }}
+                    </span>
+                    {% endif %}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                    {% for notification in request.user.notifications.all|slice:":5" %}
+                    <li class="{% if not notification.is_read %}bg-light{% endif %}">
+                        <a class="dropdown-item small" href="{% url 'view-notification' notification.id %}">
+                            {{ notification.message }}
+                            <br>
+                            <small class="text-muted">{{ notification.created_at|date:"M d, Y h:i A" }}</small>
+                        </a>
+                    </li>
+                    {% empty %}
+                    <li><a class="dropdown-item small" href="#">No notifications</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- User Profile and Logout -->
+            <div class="dropdown">
+                <a class="nav-link text-light dropdown-toggle d-flex align-items-center gap-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user fa-lg"></i>
+                    <div class="d-flex flex-column">
+                        {% if request.user.role == 'student' %}
+                            <span>{{ request.user.first_name }} (Φοιτητής)</span>
+                        {% else %}
+                            <span>{{ request.user.first_name }} (Καθηγητής)</span>
+                        {% endif %}
+
+                        <span class="text-light small">{{ request.user.email }}</span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end text-light">
+                    <a class="dropdown-item text-danger d-flex align-items-center gap-2" href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

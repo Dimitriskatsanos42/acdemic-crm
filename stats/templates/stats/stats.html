@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <!-- Summary Section -->
+    <div class="row text-center">
+        <!-- Total Meetings -->
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Συνολικός Αριθμός Συναντήσεων</h5>
+                    <h2 class="display-5">{{ num_meetings }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Combined Duration Statistics -->
+        <div class="col-md-9 col-sm-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="text-center">Διάρκεια Συναντήσεων</h5>
+                    <hr>
+                    <div class="row text-center">
+                        <div class="col-sm-3">
+                            <h6>Συνολική Διάρκεια</h6>
+                            <p class="h5">{{ total_duration }} λεπτά</p>
+                        </div>
+                        <div class="col-sm-3 border-start">
+                            <h6>Μέση Διάρκεια</h6>
+                            <p class="h5">{{ avg_duration }} λεπτά</p>
+                        </div>
+                        <div class="col-sm-3 border-start">
+                            <h6>Μέγιστη Διάρκεια</h6>
+                            <p class="h5">{{ max_duration }} λεπτά</p>
+                        </div>
+                        <div class="col-sm-3 border-start">
+                            <h6>Ελάχιστη Διάρκεια</h6>
+                            <p class="h5">{{ min_duration }} λεπτά</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Meetings by Topic -->
+    <div class="card mt-4 shadow-sm">
+        <div class="card-body">
+            <h4 class="text-center">Συναντήσεις ανά Θέμα</h4>
+            <canvas id="topicsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Temporal Distribution Section -->
+    <div class="mt-4">
+        <h4 class="text-center mb-4">Χρονική Κατανομή</h4>
+        <div class="row">
+            <!-- Days Distribution -->
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="text-center">Δημοφιλείς Ημέρες</h5>
+                        <canvas id="daysChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- Hours Distribution -->
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="text-center">Δημοφιλείς Ώρες</h5>
+                        <canvas id="hoursChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ distributions.days|json_script:"daysData" }}
+{{ distributions.hours|json_script:"hoursData" }}
+{{ distributions.topics|json_script:"topicsData" }}
+
+<script>
+    // Load the days data
+    const daysData = JSON.parse(document.getElementById('daysData').textContent);
+
+    // Prepare data for Days Chart
+    const daysChartLabels = daysData.map(day => day.day);  // Ensure 'day' exists
+    const daysChartData = daysData.map(day => day.total);   // Ensure 'total' exists
+
+    new Chart(document.getElementById('daysChart'), {
+        type: 'bar',
+        data: {
+            labels: daysChartLabels,
+            datasets: [{
+                label: 'Συναντήσεις ανά ημέρα',
+                data: daysChartData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+
+    // Load the hours data
+    const hoursData = JSON.parse(document.getElementById('hoursData').textContent);
+
+    // Prepare data for Hours Chart
+    const hoursChartLabels = hoursData.map(hour => hour.hour);  // Ensure 'hour' exists
+    const hoursChartData = hoursData.map(hour => hour.total);   // Ensure 'total' exists
+
+    new Chart(document.getElementById('hoursChart'), {
+        type: 'bar',
+        data: {
+            labels: hoursChartLabels,
+            datasets: [{
+                label: 'Συναντήσεις ανά ώρα',
+                data: hoursChartData,
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+
+    // Load the topics data
+    const topicsData = JSON.parse(document.getElementById('topicsData').textContent);
+
+    // Prepare data for Days Chart
+    const topicsChartLabels = topicsData.map(topic => topic.topic);  // Ensure 'topic' exists
+    const topicsChartData = topicsData.map(topic => topic.total);   // Ensure 'total' exists
+
+    new Chart(document.getElementById('topicsChart'), {
+        type: 'bar',
+        data: {
+            labels: topicsChartLabels,
+            datasets: [{
+                label: 'Κατανομή θεμάτων',
+                data: topicsChartData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+</script>
+
+{% endblock %}

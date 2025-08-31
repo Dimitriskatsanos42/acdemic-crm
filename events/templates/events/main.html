@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'events/calendar.html' %}
+
+{% if selected_date %}
+    <hr>
+    {% include 'events/events_per_day.html' %}
+{% endif %}
+
+{% endblock %}

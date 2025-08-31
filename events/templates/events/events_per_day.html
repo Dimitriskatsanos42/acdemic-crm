@@ -1,0 +1,224 @@
+<style>
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        position: relative; /* Needed for stretched-link compatibility */
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 8px; /* Adjust as needed */
+        right: 8px; /* Adjust as needed */
+        background-color: #f8f9fa; /* Optional: background for better visibility */
+        color: #6c757d; /* Optional: muted text color */
+        padding: 2px 6px; /* Optional: padding for a badge-like appearance */
+        font-size: 0.85rem; /* Slightly smaller font size */
+        border-radius: 4px; /* Optional: rounded corners */
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
+    }
+</style>
+
+<div class="container mt-4" style="max-width: 700px;">
+    <!-- Event Slots -->
+    <div class="card shadow-sm p-3">
+        <!-- Selected Day Events -->
+        <h4 class="text-center">Συναντήσεις για {{ selected_date|date:"l, j F Y" }}</h4>
+        <div class="row row-cols-1 mt-1 g-3">
+            {% for entry in meetings_data %}
+            <div class="col">
+                <div class="d-flex align-items-center">
+                    <!-- Time Outside the Card -->
+                    <div class="me-3">
+                        <h6 class="mb-0 text-dark">{{ entry.time|time:"h:i A" }}</h6>
+                    </div>
+
+                    <!-- Card for Event Content -->
+                    <div class="card border-0 shadow-sm flex-grow-1 bg-light" style="position: relative;">
+                        <div style="background-color: #0d6efd; width: 5px; height: 100%; position: absolute; top: 0; left: 0;"></div>
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <!-- Event Text -->
+                            {% if entry.meeting %}
+                                <small class="status-badge">Status: {{ entry.meeting.get_status_display }}</small>
+                                <div class="text-dark" >
+                                    <a href="{% url 'view-event' meeting_id=entry.meeting.id %}" class="card-link ">
+                                        <strong>{{ entry.meeting.name }}</strong><br>
+                                    </a>
+                                    {% if entry.meeting.created_by != request.user %}
+                                        <i>Από: {{ entry.meeting.created_by.get_full_name }}</i><br>
+                                    {% else %}
+                                        <i>Προς: {{ entry.meeting.get_attendee_full_name }}</i><br>
+                                    {% endif %}
+                                    <small>{{ entry.meeting.description }}</small>
+                                </div>
+                                {% if entry.meeting.created_by == request.user or entry.meeting.attendee == request.user.email %}
+                                    <!-- Buttons on the Right -->
+                                    <div class="d-flex gap-2 mt-3">
+                                        {% if request.user.role == 'professor' %}
+                                        <a href="{% url 'submit-meeting-details' meeting_id=entry.meeting.id %}">
+                                            <button class="btn btn-sm btn-success submit-event-details-btn">
+                                                <i class="fas fa-file-alt"></i>
+                                            </button>
+                                        </a>
+                                        {% endif %}
+                                        
+                                        <!-- Edit Button -->
+                                        <button class="btn btn-sm btn-secondary edit-event-btn" data-bs-toggle="modal" data-bs-target="#editEventModal{{ entry.meeting.id }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+
+                                        <!-- Delete Button -->
+                                        <button class="btn btn-sm btn-danger delete-event-btn" data-bs-toggle="modal" data-bs-target="#deleteEventModal{{ entry.meeting.id }}">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>                                    
+                                    
+                                    <!-- Modal for Editing Event -->
+                                    <div class="modal fade" id="editEventModal{{ entry.meeting.id }}" tabindex="-1" aria-labelledby="editEventModalLabel{{ entry.meeting.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editEventModalLabel">Επεξεργασία Συνάντησης</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="POST" action="{% url 'edit-event' meeting_id=entry.meeting.id %}">
+                                                    {% csrf_token %}
+                                                    <div class="modal-body">
+                                                        <!-- Meeting Title -->
+                                                        <div class="mb-3">
+                                                            <label for="name{{ entry.meeting.id }}" class="form-label">Τίτλος Συνάντησης</label>
+                                                            <input type="text" class="form-control" name="name" id="name{{ entry.meeting.id }}" value="{{ entry.meeting.name }}" required>
+                                                        </div>
+
+                                                        
+
+                                                        <!-- Event URL (Optional) -->
+                                                        <div class="mb-3">
+                                                            <label for="meetingURL{{ entry.meeting.id }}" class="form-label">URL (Προαιρετικό)</label>
+                                                            <input type="url" class="form-control" name="url" id="meetingURL{{ entry.meeting.id }}" value="{{ entry.meeting.url|default:'' }}">
+                                                        </div>
+
+                                                        <!-- Duration (Optional) -->
+                                                        <div class="mb-3">
+                                                            <label for="meetingDuration{{ entry.meeting.id }}" class="form-label">Διάρκεια (Προαιρετικό)</label>
+                                                            <select class="form-select" name="duration" id="meetingDuration{{ entry.meeting.id }}">
+                                                                <option value="" {% if entry.meeting.duration == None %}selected{% endif %}>-------</option>
+                                                                {% for value, label in entry.meeting.DURATION_CHOICES %}
+                                                                    <option value="{{ value }}" {% if value == entry.meeting.duration %}selected{% endif %}>{{ label }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+
+                                                        <!-- Description -->
+                                                        <div class="mb-3">
+                                                            <label for="description{{ entry.meeting.id }}" class="form-label">Περιγραφή</label>
+                                                            <textarea class="form-control" name="description" id="description{{ entry.meeting.id }}" rows="3">{{ entry.meeting.description }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ακύρωση</button>
+                                                        <button type="submit" class="btn btn-primary">Αποθήκευση αλλαγών</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal for Deleting Event -->
+                                    <div class="modal fade" id="deleteEventModal{{ entry.meeting.id }}" tabindex="-1" aria-labelledby="deleteEventModalLabel{{ entry.meeting.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteEventModalLabel">Διαγραφή Συνάντησης</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Σίγουρα θέλετε να διαγράψετε τη συνάντηση <strong>{{ entry.meeting.name }}</strong> η οποία έχει προγραμματιστεί για <strong>{{ entry.time|time:"h:i A" }}</strong>;
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <a href="{% url 'delete-event' meeting_id=entry.meeting.id %}" class="btn btn-danger">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <p class="card-text text-dark mb-0">Δεν υπάρχει προγραμματισμένη συνάντηση.</p>
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addEventModal" data-time="{{ entry.time }}">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Add Event Modal -->
+<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEventModalLabel">Δημιουργία εκδήλωσης</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="addEventForm">
+                {% csrf_token %}
+                <input type="hidden" name="time" id="eventTimeInput">
+                <div class="modal-body">
+                    {{ form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ακύρωση</button>
+                    <button type="submit" class="btn btn-primary">Αποθήκευση</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('addEventModal');
+    const timeInput = document.getElementById('eventTimeInput');
+
+    modal.addEventListener('show.bs.modal', (event) => {
+        const button = event.relatedTarget; // Button that triggered the modal
+        const rawTime = button.getAttribute('data-time'); // Extract raw time value
+        console.log(`Raw time: ${rawTime}`);
+
+        // Parse raw time into HH:MM format
+        const timeParts = rawTime.match(/^\s*(\d+)(?::(\d\d))?\s*(a\.?m\.?|p\.?m\.?)\s*$/i);
+        console.log(`Regex match:`, timeParts);
+
+        if (timeParts) {
+            let hours = parseInt(timeParts[1], 10); // Extract hours
+            const minutes = timeParts[2] || '00';  // Default to 00 if minutes are missing
+
+            // Adjust hours for AM/PM
+            if (timeParts[3].toLowerCase().startsWith('p') && hours !== 12) {
+                hours += 12;
+            } else if (timeParts[3].toLowerCase().startsWith('a') && hours === 12) {
+                hours = 0;
+            }
+
+            // Format time as HH:MM
+            const formattedTime = `${String(hours).padStart(2, '0')}:${minutes}`;
+            console.log(`Formatted time: ${formattedTime}`);
+            timeInput.value = formattedTime;
+        } else {
+            console.error(`Failed to parse time: ${rawTime}`);
+        }
+    });
+});
+
+document.querySelectorAll('.edit-event-btn, .delete-event-btn').forEach(button => {
+    button.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+});
+</script>

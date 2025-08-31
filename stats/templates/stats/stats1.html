@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-3">
+    <h2 class="mb-4 text-center">Events Statistics</h2>
+
+    <!-- Total Events -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Total Scheduled Events</h5>
+            <p class="display-4">{{ stats.total_events }}</p>
+        </div>
+    </div>
+
+    <!-- Average Duration -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Average Event Duration</h5>
+            <p class="display-4">{{ stats.average_duration|default:"N/A" }} minutes</p>
+        </div>
+    </div>
+
+    <!-- Events per Professor -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Events Per Professor</h5>
+            <ul>
+                {% for professor in stats.events_per_professor %}
+                    <li>{{ professor.professor_name }}: {{ professor.total }} events</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Total Duration -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>Total Events Duration</h5>
+            <p class="display-4">{{ stats.total_duration|default:"N/A" }} minutes</p>
+        </div>
+    </div>
+
+    <!-- Temporal Distribution -->
+    <div class="row">
+        <!-- Days Distribution -->
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5>Popular Days</h5>
+                    <canvas id="daysChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Hours Distribution -->
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5>Popular Hours</h5>
+                    <canvas id="hoursChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ stats.temporal_distribution.days|json_script:"daysData" }}
+{{ stats.temporal_distribution.hours|json_script:"hoursData" }}
+
+<script>
+    // Load the days data
+    const daysData = JSON.parse(document.getElementById('daysData').textContent);
+
+    // Prepare data for Days Chart
+    const daysChartLabels = daysData.map(day => day.date);  // Ensure 'date' exists
+    const daysChartData = daysData.map(day => day.total);   // Ensure 'total' exists
+
+    new Chart(document.getElementById('daysChart'), {
+        type: 'bar',
+        data: {
+            labels: daysChartLabels,
+            datasets: [{
+                label: 'Events Per Day',
+                data: daysChartData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+
+    // Load the hours data
+    const hoursData = JSON.parse(document.getElementById('hoursData').textContent);
+
+    // Prepare data for Hours Chart
+    const hoursChartLabels = hoursData.map(hour => hour.time);  // Ensure 'time' exists
+    const hoursChartData = hoursData.map(hour => hour.total);   // Ensure 'total' exists
+
+    console.log("Days Data:", daysData);
+    console.log("Hours Data:", hoursData);
+
+    new Chart(document.getElementById('hoursChart'), {
+        type: 'bar',
+        data: {
+            labels: hoursChartLabels,
+            datasets: [{
+                label: 'Events Per Hour',
+                data: hoursChartData,
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+</script>
+
+{% endblock %}
