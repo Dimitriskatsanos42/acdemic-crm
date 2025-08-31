@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if role == 'student' %}
+    <div class="text-center">
+        <h1>Καλωσόρισες, φοιτητή {{ request.user.first_name }}!</h1>
+        <p class="lead">Εδώ μπορείς να εξερευνείς τα μαθήματά σου, να προγραμματίζεις συναντήσεις και εν γένει να έχεις τον έλεγχο του ακαδημαϊκού σου ταξιδιού!</p>
+    </div>
+    {% else %}
+    <div class="text-center">
+        <h1>Καλωσόρισες, καθηγητή {{ request.user.last_name }}!</h1>
+        <p class="lead">Εδώ μπορείς να παρακολουθείς τις εγγραφές φοιτητών σε μαθήματα, να προγραμματίζεις συναντήσεις και εν γένει να έχεις τον έλεγχο του ακαδημαϊκού σου ταξιδιού!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

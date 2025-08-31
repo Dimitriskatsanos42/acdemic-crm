@@ -1,0 +1,81 @@
+/* Basic reset */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Navigation bar container */
+.navbar {
+  display: flex;
+  justify-content: space-between; /* Space between left and right sections */
+  align-items: center;
+  background-color: #5c4c9a;
+  padding: 10px 20px;
+}
+
+/* Left section containing logo and links */
+.navbar .left-section {
+  display: flex;
+  align-items: center;
+  gap: 50px; /* Space between logo and links */
+}
+
+/* Navigation bar logo */
+.navbar .logo {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Navigation links container */
+.navbar .nav-links {
+  display: flex;
+  gap: 15px; /* Space between links */
+}
+
+/* Navigation links container */
+.navbar .nav-links a {
+  color: rgba(255, 255, 255, 0.7); /* Faded text */
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: normal; /* Normal weight by default */
+  transition: color 0.3s ease, font-weight 0.3s ease; /* Smooth transition */
+}
+
+/* Hover effect for navigation links */
+.navbar .nav-links a:hover {
+  color: rgba(255, 255, 255, 1); /* Fully visible text */
+  font-weight: semi-bold; /* Bold on hover */
+}
+
+/* Right section for user profile */
+.navbar .user-profile {
+  display: flex;
+  align-items: center;
+  color: white;
+  gap: 8px; /* Space between icon and username */
+}
+
+/* User icon */
+.navbar .user-profile i {
+  font-size: 16px;
+}
+
+/* Username styling */
+.navbar .user-profile span {
+  font-size: 14px;
+}
+
+/* Styling for the Logout link */
+.navbar .user-profile .logout {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  margin-left: 10px; /* Space between username and logout */
+  transition: color 0.3s ease;
+}
+
+.navbar .user-profile .logout:hover {
+  color: #FF4C4C; /* Highlight logout link in red on hover */
+}

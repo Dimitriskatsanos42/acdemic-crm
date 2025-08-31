@@ -1,0 +1,83 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CRM - Σύστημα Διαχείρισης Φοιτητών</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/index/styles.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">CRM</div>
+            <a href="{% url 'login' %}">
+                <button class="login-btn">Σύνδεση</button>
+            </a>
+            
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Ολοκληρωμένο Σύστημα CRM για Εκπαιδευτικά Ιδρύματα</h1>
+            <p>Διαχειριστείτε φοιτητές, παρακολουθήστε επιδόσεις και ενισχύστε την εκπαιδευτική σας προσέγγιση με το CRM.</p>
+            <a href="{% url 'register' %}">
+                <button class="cta-btn">Εγγραφή</button>
+            </a>
+        </div>
+        <div class="hero-image">
+            <img src="{% static 'accounts/images/crm.jpg' %}" alt="CRM Dashboard Preview">
+        </div>
+    </section>
+
+    <section class="features">
+        <h2>Γιατί να επιλέξετε το CRM;</h2>
+        <div class="features-grid">
+            <div class="feature">
+                <h3>Διαχείριση Φοιτητών</h3>
+                <p>Αποθηκεύστε και διαχειριστείτε τα δεδομένα των φοιτητών σας με ευκολία και ακρίβεια.</p>
+            </div>
+            <div class="feature">
+                <h3>Παρακολούθηση Μαθημάτων</h3>
+                <p>Διαχειριστείτε τα μαθήματα, τις παραδόσεις και τις προθεσμίες εργασιών με ένα μόνο κλικ.</p>
+            </div>
+            <div class="feature">
+                <h3>Αναφορές και Στατιστικά</h3>
+                <p>Λάβετε λεπτομερείς αναφορές για την πρόοδο των φοιτητών και αξιολογήστε τα αποτελέσματα.</p>
+            </div>
+            <div class="feature">
+                <h3>Επικοινωνία σε Πραγματικό Χρόνο</h3>
+                <p>Επικοινωνήστε με τους φοιτητές σας μέσω ενσωματωμένου συστήματος μηνυμάτων.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <h2>Τι Λένε οι Χρήστες μας</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial">
+                <p>"Το CRM έχει αλλάξει τον τρόπο που παρακολουθούμε την απόδοση των φοιτητών μας!"</p>
+                <span>- Καθηγητής Ιωάννης Παπαδόπουλος</span>
+            </div>
+            <div class="testimonial">
+                <p>"Η ευκολία στη διαχείριση μαθημάτων και η άμεση επικοινωνία το καθιστούν αναντικατάστατο εργαλείο."</p>
+                <span>- Καθηγήτρια Μαρία Κωνσταντίνου</span>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 CRM </p>
+            <ul class="footer-links">
+                <li><a href="#">Πολιτική Απορρήτου</a></li>
+                <li><a href="#">Όροι Χρήσης</a></li>
+                <li><a href="#">Επικοινωνία</a></li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>

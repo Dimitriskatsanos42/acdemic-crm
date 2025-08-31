@@ -1,0 +1,153 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    line-height: 1.6;
+    color: #333;
+    background-color: #f2f4f8; /* Ανοιχτό γκρι φόντο */
+}
+
+header {
+    background-color: #4a235a; /* Μωβ χρώμα */
+    padding: 20px 30px;
+    color: white;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.login-btn {
+    background-color: #8e44ad; /* Μωβ χρώμα */
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Hover effect */
+button:hover {
+    transform: scale(1.05); /* Enlarges the button by 20% */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow for a nice effect */
+}
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px 30px;
+    background-color: #5c4c9a; /* Ανοιχτό μωβ χρώμα */
+    color: white;
+}
+
+.hero-content {
+    max-width: 600px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.cta-btn {
+    background-color: #8e44ad; /* Μωβ χρώμα */
+    color: white;
+    cursor: pointer;
+    padding: 15px 30px;
+    text-decoration: none;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+.hero-image img {
+    width: 500px;
+    border-radius: 10px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.features {
+    padding: 50px 100px;
+    text-align: center;
+    background-color: white;
+}
+
+.features h2 {
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+
+.features-grid {
+    display: flex;
+    justify-content: space-around;
+    text-align: left;
+}
+
+.feature {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    width: 22%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feature h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.feature p {
+    font-size: 18px;
+}
+
+.testimonials {
+    padding: 50px 100px;
+    background-color: #f0f0f0;
+    text-align: center;
+}
+
+.testimonials h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.testimonials-grid {
+    display: flex;
+    justify-content: space-around;
+    text-align: left;
+}
+
+.testimonial {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 45%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial p {
+    font-style: italic;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.testimonial span {
+    font-size: 16px;
+    font-weight: bold;
+}
